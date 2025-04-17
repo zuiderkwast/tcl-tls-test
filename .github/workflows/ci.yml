@@ -7,15 +7,20 @@ permissions:
 
 jobs:
   test:
-    name: fedora-latest-tcl9-tls
+    name: fedora-latest-tcl-tls
     runs-on: ubuntu-latest
     container: fedora:latest
     timeout-minutes: 1440
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-      - name: Install tcl and tcltls
-        run: dnf -y install tcl tcltls
-      - name: Check TCL version
-        run: ls -l $(which tclsh)
-      - name: run TCL script
+      - name: Install tcl, tcl8 and tcltls
+        run: dnf -y install tcl tcl8 tcltls
+      - name: Check TCL versions
+        run: |
+          ls -l $(which tclsh)
+          ls -l $(which tclsh8.6)
+      - name: Run TCL script using TCL 9
         run: tclsh test.tcl
+      - name: Run TCL script using TCL 8.6
+        if: always()
+        run: tclsh8.6 test.tcl
