@@ -1,0 +1,21 @@
+name: CI
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: fedora-latest-tcl9-tls
+    runs-on: ubuntu-latest
+    container: fedora:latest
+    timeout-minutes: 1440
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - name: Install tcl and tcltls
+        run: dnf -y install tcl tcltls
+      - name: Check TCL version
+        run: ls -l $(which tclsh)
+      - name: run TCL script
+        run: tclsh test.tcl
